@@ -1,27 +1,34 @@
 #include "Ultrasonic.h"
+#include "Application.h"
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
+#include "Mqtt.h"
 
 Ultrasonic ultrasonic(D7);
+WiFiClient espClient;
+unsigned long lastMsg = 0;         // Dernier message envoyé
+// Déclaration de la classe Mqtt
+Mqtt Server(espClient, "Note 13p+", "123456789", "broker.emqx.io");
 
 void setup() {
-  // put your setup code here, to run once:
-  // pinMode(LED_BUILTIN, OUTPUT);  // Initialize the LED_BUILTIN pin as an output
-  Serial.begin(9600);
+  Serial.begin(115200);
+  Server.setup_wifi();
+  Serial.println("Systeme initialisé.");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  //digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on (Note that LOW is the voltage level
-  // but actually the LED is on; this is because
-  // it is active low on the ESP-01)
-  //delay(1000);                      // Wait for a second
-  //digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off by making the voltage HIGH
-  //delay(2000);                      // Wait for two seconds (to demonstrate the active low LED)
-  long RangeInCentimeters;
+  //Serial.println(ultrasonic.MeasureInCentimeters());
+  if (!Server.Isconnected()) {
+        Server.reconnect();
+  }
+  Server.run();
 
-  //Serial.println("The distance to obstacles in front is: ");
-
-  RangeInCentimeters = ultrasonic.MeasureInCentimeters(); // two measurements should keep an interval
-  Serial.println(RangeInCentimeters);//0~400cm
-  //Serial.println(" cm");
-  delay(250);
+  unsigned long now2 = millis();
+  
+  if (now2 - lastMsg > 100) {
+    lastMsg = now2;
+  Server.envoyermsg("Distance",ultrasonic.MeasureInCentimeters());
+  Server.envoyermsg("dB",5);
+  Server.envoyermsg("msgs",9);
+  }
 }

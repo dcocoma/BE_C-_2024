@@ -1,55 +1,73 @@
-/*********************************************************************
- * @file  Mqtt.h
- * @author <davidlcr@live.com>
- * @brief Fichier header du Mqtt
- *********************************************************************/
-
 #ifndef MQTT_H_
 #define MQTT_H_
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#define MSG_BUFFER_SIZE (50)
+#include "Arduino.h"
 
 /**
   * @class Mqtt
-  * @brief Classe Mqtt 
+  * @brief Classe pour gérer la connexion MQTT
 */    
 class Mqtt
 {
-    private:
+private:
+    const char* ssid;              // Nom du réseau WiFi
+    const char* password;          // Mot de passe du réseau WiFi
+    const char* mqtt_server;       // Adresse du serveur MQTT
+    PubSubClient client;           // Client MQTT
+    char msg[MSG_BUFFER_SIZE];     // Tampon pour les messages MQTT
+    int value;                     // Valeur associée au message
 
-    const char* ssid = "Note 13p+";
-    const char* password = "123456789";
-    const char* mqtt_server = "broker.emqx.io";
+public:
+    /**
+     * @brief Constructeur avec paramètres
+     * @param wifiClient Client WiFi
+     * @param ssid Nom du réseau WiFi
+     * @param password Mot de passe du réseau WiFi
+     * @param mqtt_server Adresse du serveur MQTT
+     */
+    Mqtt(WiFiClient& wifiClient, const char* ssid, const char* password, const char* mqtt_server);
 
-    WiFiClient espClient;
-    PubSubClient client(espClient);
-    unsigned long lastMsg = 0;
-    #define MSG_BUFFER_SIZE	(50)
-    char msg[MSG_BUFFER_SIZE];
-    int value = 0;
-  public :
     /**
-     * @fn Mqtt();
-     * @brief Constructeur par defaut
-    */    
-    Mqtt();
-    /**
-     * @fn Mqtt();
      * @brief Destructeur
-    */    
-    ~Mqtt();    
+     */
+    ~Mqtt();
+
+
+    void run();
+
+    bool Isconnected();
+
     /**
-     * @fn void init(void)
-     * @brief Fonction d'initialisation de l'Mqtt
-    */
+     * @brief Connexion au réseau WiFi
+     */
     void setup_wifi(void);
+
     /**
-     * @fn void run(void)
-     * @brief Fonction de lancement de l'Mqtt
-    */
-    void envoyermsg(char canal, char msg);
+     * @brief Envoi d’un message via MQTT
+     * @param canal Canal MQTT
+     * @param msg Message à envoyer
+     */
+    void envoyermsg(const char* canal, int val);
+
+    /**
+     * @brief Reconnexion au serveur MQTT si la connexion est perdue
+     */
     void reconnect();
-    void callback(char* topic, byte* payload, unsigned int length)
+
+    /**
+     * @brief Callback pour gérer les messages reçus
+     */
+
+
+    /**
+     * @brief Modifier le message écrit (fonctionnalité personnalisée)
+     */
     void ModifierMotEcrit();
+
+    static void callback(char* topic, byte* payload, unsigned int length);
 };
+
 #endif
