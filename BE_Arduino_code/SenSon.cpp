@@ -1,22 +1,12 @@
 #include <iostream>
+#include "SenSon.h"
 #include <Arduino.h>
 using namespace std;
-class SenSon {
-private:
-    int pin;
-    int dB; 
+SenSon::SenSon(int p) : pin(p), dB(0) {}
 
-public:
-    // Constructor
-    SenSon(int p) : pin(p), dB(0) {}
-
-    void Init() {
-        pinMode(pin, INPUT); // set pin as an input
-        
-    }
-
-    int getdB() {
-        dB = analogRead(pin);
-        return dB;
-    }
-};
+void SenSon::init() {
+    pinMode(pin, INPUT_PULLUP); /
+bool SenProx::getDb() {
+    dB = analogRead(pin);
+    return dB;
+}
