@@ -1,23 +1,25 @@
 #include <iostream>
-#include <Arduino.h>
-#include 
-using namespace std;
-class SenSon {
-private:
-    char* Text;
-    int PosLCD; 
+#include "LCD.h"
 
-public:
-    // Constructor
-    SenSon(int p) : pin(p), dB(0) {}
+LCD::LCD(int rs, int enable, int d4, int d5, int d6, int d7) : lcd(rs, enable, d4, d5, d6, d7) {
+    // Construtor da classe LCD, inicializa o LCD com os pinos fornecidos
+}
 
-    void Init() {
-        pinMode(pin, INPUT); // set pin as an input
-        
-    }
+void LCD::Init() {
+    lcd.begin(16, 2);  // Inicializa o LCD com 16 colunas e 2 linhas
+    lcd.clear();       // Limpa a tela ao iniciar
+}
 
-    int getdB() {
-        dB = analogRead(pin);
-        return dB;
-    }
-};
+void LCD::SetTextF1(char* texto) {
+    TextF1 = texto;   // Define o texto a ser exibido no LCD
+}
+
+void LCD::SetPosLCD(int num) {
+    PosLCD = num;     // Define a posição do cursor (coluna 0 a 15)
+    lcd.setCursor(PosLCD, 0);  // Move o cursor para a posição dada
+}
+
+void LCD::Refresh() {
+    lcd.clear();           // Limpa o display
+    lcd.print(TextF1);     // Exibe o texto no LCD
+}
