@@ -1,24 +1,20 @@
 #include <iostream>
 #include <Arduino.h>
 using namespace std;
-class Potenciometre {
-private:
-    int pin;
-    int position; 
+#include "LED.h"
+LED::LED(int p) : pin(p){}
 
-public:
-    // Constructor
-    Potenciometre(int p) : pin(p), position(0) {}
 
-    void Init() {
-        pinMode(pin, INPUT); // set pin as an input
-        
-    }
+void LED::init() {
+    pinMode(pin, OUTPUT);  //distance by divisor
+}
 
-    int getPosPot() {
-        position = analogRead(pin);
-        return position;
-    }
+void LED::setEtat(bool c) {
+    if (c) {
+         digitalWrite(pin, HIGH);
+        else{
+         digitalWrite(pin, LOW);
+         } 
+}
 };
-
 
