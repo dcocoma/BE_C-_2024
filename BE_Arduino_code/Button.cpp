@@ -1,22 +1,23 @@
 #include <iostream>
-#include <Arduino.h>
+#include "Button.h"
 using namespace std;
-class Button {
-private:
-    int pin;
-    bool etat; 
+Button::Button(int p) : pin(p), etat(false), dernierEtat(false) {}
 
-public:
-    // Constructor
-    Button(int p) : pin(p), etat(0) {}
-
-    void Init() {
-        pinMode(pin, INPUT); // set pin as an input
-        
+void Button::init() {
+    pinMode(pin, INPUT_PULLUP); /
+bool Button::getButton() {
+    
+    bool estatActuel = !digitalRead(pin); 
+    
+    if (etatActuel && !dernierEtat) {
+        dernierEtat = etatActuel; 
+        return true;              /
     }
+    
+    dernierEtat = estatActuel;
+    return false; 
+}
 
-    bool getEtat() {
-        etat = analogRead(pin);
-        return etat;
-    }
-};
+bool Button::isPressed() {
+    return !digitalRead(pin);
+}
