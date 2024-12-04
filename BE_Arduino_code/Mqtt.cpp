@@ -79,12 +79,23 @@ void Mqtt::reconnect() {
  * @param canal Canal cible
  * @param message Contenu du message
  */
-void Mqtt::envoyermsg(const char* canal, int val) {
+void Mqtt::envoyermsgint(const char* canal, int val) {
 
     snprintf(msg, MSG_BUFFER_SIZE, "%d", val); // Convierte el valor a cadena y lo almacena en 'msg'
     String fullTopic = String("outTopic/") + String(canal);
     Serial.print("Publish message: ");
     //Serial.print("Message envoyé sur le sujet: ");
+    Serial.print(fullTopic);
+    Serial.print(" ");
+    Serial.println(msg);
+
+    client.publish(fullTopic.c_str(), msg); // Publicar en el canal correcto
+}
+
+void Mqtt::envoyermsgtxt(const char* canal, const String text) {
+    snprintf(msg, MSG_BUFFER_SIZE, "%s", text.c_str()); // Convierte el objeto String a char*
+    
+    String fullTopic = String("outTopic/") + String(canal);
     Serial.print(fullTopic);
     Serial.print(" ");
     Serial.println(msg);

@@ -52,7 +52,8 @@ public:
      * @param canal Canal MQTT
      * @param msg Message à envoyer
      */
-    void envoyermsg(const char* canal, int val);
+    void envoyermsgint(const char* canal, int val);
+    void envoyermsgtxt(const char* canal, String text);
 
     /**
      * @brief Reconnexion au serveur MQTT si la connexion est perdue

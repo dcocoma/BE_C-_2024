@@ -11,12 +11,6 @@ private:
 public:
     // Constructor
     Button(int pin);
-
-   
-    void init();
-
-    bool getButton();
-
     bool isPressed();
 };
 

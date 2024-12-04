@@ -11,15 +11,18 @@ private:
   const int colorG;
   const int colorB;      
 
-  char* TextF1;           
+  String TextF1;           
   int PosLCD;
 
 public:
   LCD();
   LCD(const int colorR, const int colorG, const int colorB);  
   void Init();
-  void SetTextF1(char* texto);  
-  void SetPosLCD(int num);      
+  void SetTextF1(String texto);
+  void SetPosLCD(int num);
+  int getPosLCD();
   void Refresh();  
+  void print(String txt);
+  void setCursor(int pos);
 };
 #endif
