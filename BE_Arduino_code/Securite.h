@@ -1,8 +1,11 @@
-#include <iostream>
-using namespace std;
 #ifndef SECURITE_H
 #define SECURITE_H
+
 #include <Arduino.h> 
+#include "LCD.h"
+#include "Button.h"
+#include "Potentiometre.h"
+
 class Securite {
 private:
     int* motPasse; 
@@ -13,13 +16,13 @@ private:
 
 public:
     // Constructor
-     Securite(int* motPasse, int maxTentatif);
+     Securite();
     ~Securite();
     // Methods
-    bool validation(int* motPasse, int* motEcrit);            
-    void effacer();  
-    void setMotEcrit(int posPasse, int motLCD);
-    int PPToPosLCD(int posPot);
+    bool validation();            
+    void effacer(Button &button);  
+    void setMotEcrit(int posPot, LCD &lcd, Button &button);
+    int PPToPosLCD(int posPot, LCD &lcd);
 };
 
-#endif
+#endifS
