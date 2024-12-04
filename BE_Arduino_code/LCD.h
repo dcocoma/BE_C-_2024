@@ -10,9 +10,9 @@ private:
 
 public:
     LCD(int rs, int enable, int d4, int d5, int d6, int d7);  
-    void Init();   
-    void SetTextF1(char* texto);  
-    void SetPosLCD(int num);      
-    void Refresh();  
+    void init();   
+    void setTextF1(char* texto);  
+    void setPosLCD(int num);      
+    void refresh();  
 
 #endif
