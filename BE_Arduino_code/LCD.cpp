@@ -1,25 +1,34 @@
-#include <iostream>
 #include "LCD.h"
+#include <Wire.h>
+#include "rgb_lcd.h"
 
-LCD::LCD(int rs, int enable, int d4, int d5, int d6, int d7) : lcd(rs, enable, d4, d5, d6, d7) {
-   
+LCD::LCD() : colorR(255), colorG(0), colorB(0),PosLCD(0){
+  lcd.begin(16, 2);
+  lcd.setRGB(colorR, colorG, colorB);
+
+  //TextF1 = "Welcome";
+  lcd.print("hello, world!");
+  delay(1000);
 }
 
-void LCD::init() {
-    lcd.begin(16, 2);  
-    lcd.clear();       
+void LCD::Init() {
+  lcd.clear();
+  delay(2000);
 }
 
-void LCD::setTextF1(char* texto) {
+void LCD::SetTextF1(char* texto) {
     TextF1 = texto;   
 }
 
-void LCD::setPosLCD(int num) {
+void LCD::SetPosLCD(int num) {
     PosLCD = num;    
-    lcd.setCursor(PosLCD, 0);  
+    lcd.setCursor(PosLCD, 1);  
 }
 
-void LCD::refresh() {
+void LCD::Refresh() {
     lcd.clear();           
-    lcd.print(TextF1);    
+    lcd.print(String(TextF1));
+    lcd.setCursor(0,1);
+    lcd.print("0123456789");
+    lcd.setCursor(PosLCD, 1);
 }

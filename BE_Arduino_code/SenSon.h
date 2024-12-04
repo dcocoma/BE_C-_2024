@@ -6,17 +6,12 @@
 class SenSon {
 private:
     int pin;      
-    int dB;   
-S
+    int dB;
 public:
     // Constructor
     SenSon(int pin);
-    SenSon(int dB);
-
-    void init();
-
-    bool getDb();
-
+    int getpin();
+    int getDb();
 };
 
 #endif

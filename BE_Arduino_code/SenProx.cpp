@@ -1,13 +1,20 @@
-#include <iostream>
-#include "SenProx.h"
 #include <Arduino.h>
-using namespace std;
-SenProx::SenProx(int p) : pin(p), distance(0) {}
+#include "SenProx.h"
+#include "Ultrasonic.h"
 
-void SenProx::init() {
-    pinMode(pin, INPUT_PULLUP); /
-bool SenProx::getDistance() {
-    distance = analogRead(pin);
-    return distance;
+// Constructor
+SenProx::SenProx(int pin) 
+    : ultrason(pin),  // Initialize the Ultrasonic member with the given pin
+      pin(pin),
+      distance(0) {}
+
+// Getter for the pin
+int SenProx::getpin() {
+    return pin;
 }
 
+// Getter for the distance
+int SenProx::getDistance() {
+    distance = ultrason.MeasureInCentimeters();
+    return distance;
+}

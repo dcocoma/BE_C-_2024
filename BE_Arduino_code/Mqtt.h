@@ -16,9 +16,11 @@ private:
     const char* ssid;              // Nom du réseau WiFi
     const char* password;          // Mot de passe du réseau WiFi
     const char* mqtt_server;       // Adresse du serveur MQTT
+    WiFiClient NewClient;          // Client WiFI
     PubSubClient client;           // Client MQTT
     char msg[MSG_BUFFER_SIZE];     // Tampon pour les messages MQTT
     int value;                     // Valeur associée au message
+    
 
 public:
     /**
@@ -28,7 +30,7 @@ public:
      * @param password Mot de passe du réseau WiFi
      * @param mqtt_server Adresse du serveur MQTT
      */
-    Mqtt(WiFiClient& wifiClient, const char* ssid, const char* password, const char* mqtt_server);
+    Mqtt(const char* ssid, const char* password, const char* mqtt_server);
 
     /**
      * @brief Destructeur

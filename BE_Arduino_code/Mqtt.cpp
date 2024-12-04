@@ -3,12 +3,12 @@
 /**
  * @brief Constructeur de la classe Mqtt
  */
-Mqtt::Mqtt(WiFiClient& wifiClient, const char* ssid, const char* password, const char* mqtt_server)
-    : ssid(ssid), password(password), mqtt_server(mqtt_server), client(wifiClient), value(0) {
-    client.setClient(wifiClient);
-    client.setServer(mqtt_server, 1883);
-    client.setCallback(callback);
-    }
+Mqtt::Mqtt(const char* ssid, const char* password, const char* mqtt_server) : ssid(ssid), password(password), mqtt_server(mqtt_server), value(0) {
+  
+  client.setClient(NewClient);
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+}
 
 /**
  * @brief Destructeur de la classe Mqtt
@@ -90,7 +90,6 @@ void Mqtt::envoyermsg(const char* canal, int val) {
     Serial.println(msg);
 
     client.publish(fullTopic.c_str(), msg); // Publicar en el canal correcto
-
 }
 
 /**
