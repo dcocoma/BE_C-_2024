@@ -1,15 +1,20 @@
 #ifndef POTENCIOMETRE_H
 #define POTENCIOMETRE_H
-#include <Arduino.h> 
 
+#include <Arduino.h>
+
+// Class to handle potentiometer operations
 class Potenciometre {
 private:
-    int pin; 
-    unsigned int pos;
+    int pin;               // Analog pin connected to the potentiometer
+    unsigned int pos;      // Stores the scaled position value
+
 public:
-    // Constructor
+    // Constructor: initializes the potentiometer pin
     Potenciometre();
-    int getPosPot(); // Retorna a posição do potenciômetro
+
+    // Reads and returns the current potentiometer position
+    int getPosPot();
 };
 
 #endif

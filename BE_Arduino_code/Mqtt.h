@@ -3,74 +3,48 @@
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <Arduino.h>
+
+// Buffer size for MQTT messages
 #define MSG_BUFFER_SIZE (50)
-#include "Arduino.h"
 
 /**
-  * @class Mqtt
-  * @brief Classe pour gérer la connexion MQTT
-*/    
-class Mqtt
-{
+ * @class Mqtt
+ * @brief Class to manage WiFi and MQTT connections and operations.
+ */
+class Mqtt {
 private:
-    const char* ssid;              // Nom du réseau WiFi
-    const char* password;          // Mot de passe du réseau WiFi
-    const char* mqtt_server;       // Adresse du serveur MQTT
-    WiFiClient NewClient;          // Client WiFI
-    PubSubClient client;           // Client MQTT
-    char msg[MSG_BUFFER_SIZE];     // Tampon pour les messages MQTT
-    int value;                     // Valeur associée au message
-    
+    const char* ssid;              // WiFi network name
+    const char* password;          // WiFi network password
+    const char* mqtt_server;       // MQTT broker address
+    WiFiClient NewClient;          // WiFi client for network communication
+    PubSubClient client;           // MQTT client for broker communication
+    char msg[MSG_BUFFER_SIZE];     // Buffer for MQTT messages
+    int value;                     // Value associated with the message
 
 public:
     /**
-     * @brief Constructeur avec paramètres
-     * @param wifiClient Client WiFi
-     * @param ssid Nom du réseau WiFi
-     * @param password Mot de passe du réseau WiFi
-     * @param mqtt_server Adresse du serveur MQTT
+     * @brief Constructor: Initializes WiFi and MQTT parameters.
+     * @param ssid WiFi network name.
+     * @param password WiFi network password.
+     * @param mqtt_server MQTT broker address.
      */
     Mqtt(const char* ssid, const char* password, const char* mqtt_server);
 
     /**
-     * @brief Destructeur
+     * @brief Destructor: Cleans up resources.
      */
     ~Mqtt();
 
-
-    void run();
-
-    bool Isconnected();
-
-    /**
-     * @brief Connexion au réseau WiFi
-     */
-    void setup_wifi(void);
-
-    /**
-     * @brief Envoi d’un message via MQTT
-     * @param canal Canal MQTT
-     * @param msg Message à envoyer
-     */
-    void envoyermsgint(const char* canal, int val);
-    void envoyermsgtxt(const char* canal, String text);
-
-    /**
-     * @brief Reconnexion au serveur MQTT si la connexion est perdue
-     */
-    void reconnect();
-
-    /**
-     * @brief Callback pour gérer les messages reçus
-     */
-
-
-    /**
-     * @brief Modifier le message écrit (fonctionnalité personnalisée)
-     */
-    void ModifierMotEcrit();
-
-    static void callback(char* topic, byte* payload, unsigned int length);
+    void run();                      // Keeps the MQTT client running
+    bool Isconnected();              // Checks if MQTT client is connected
+    void setup_wifi();               // Connects to WiFi
+    void reconnect();                // Reconnects to MQTT broker
+    void envoyermsgint(const char* canal, int val);  // Sends an integer message
+    void envoyermsgtxt(const char* canal, String text); // Sends a text message
+    static void callback(char* topic, byte* payload, unsigned int length); // Message callback
+    void ModifierMotEcrit();         // Custom functionality placeholder
 };
 
 #endif
+

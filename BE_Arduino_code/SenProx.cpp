@@ -2,19 +2,19 @@
 #include "SenProx.h"
 #include "Ultrasonic.h"
 
-// Constructor
+// Constructor: initializes the ultrasonic sensor with the specified pin
 SenProx::SenProx(int pin) 
-    : ultrason(pin),  // Initialize the Ultrasonic member with the given pin
-      pin(pin),
-      distance(0) {}
+    : ultrason(pin),  // Initialize the Ultrasonic object with the provided pin
+      pin(pin),       // Store the pin number
+      distance(0) {}  // Initialize the distance to 0
 
-// Getter for the pin
+// Returns the pin number associated with the ultrasonic sensor
 int SenProx::getpin() {
     return pin;
 }
 
-// Getter for the distance
+// Measures and returns the current distance in centimeters
 int SenProx::getDistance() {
-    distance = ultrason.MeasureInCentimeters();
-    return distance;
+    distance = ultrason.MeasureInCentimeters(); // Use the Ultrasonic library to measure distance
+    return distance;                            // Return the measured distance
 }

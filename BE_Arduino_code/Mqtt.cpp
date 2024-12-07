@@ -1,118 +1,124 @@
 #include "Mqtt.h"
 
 /**
- * @brief Constructeur de la classe Mqtt
+ * @brief Constructor: Initializes the MQTT client and sets its parameters.
+ * @param ssid WiFi network name.
+ * @param password WiFi network password.
+ * @param mqtt_server MQTT server address.
  */
-Mqtt::Mqtt(const char* ssid, const char* password, const char* mqtt_server) : ssid(ssid), password(password), mqtt_server(mqtt_server), value(0) {
-  
-  client.setClient(NewClient);
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+Mqtt::Mqtt(const char* ssid, const char* password, const char* mqtt_server) 
+    : ssid(ssid), password(password), mqtt_server(mqtt_server), value(0) {
+    client.setClient(NewClient);                 // Attach the WiFi client to the MQTT client
+    client.setServer(mqtt_server, 1883);         // Set MQTT server and port
+    client.setCallback(callback);               // Set the callback function for incoming messages
 }
 
 /**
- * @brief Destructeur de la classe Mqtt
+ * @brief Destructor: Cleans up resources (if any).
  */
 Mqtt::~Mqtt() {}
 
-
+/**
+ * @brief Keeps the MQTT connection active by processing incoming/outgoing messages.
+ */
 void Mqtt::run() {
-    client.loop(); // Mantener MQTT activo
+    client.loop();
 }
 
-bool Mqtt::Isconnected(){
+/**
+ * @brief Checks if the MQTT client is connected to the broker.
+ * @return True if connected, false otherwise.
+ */
+bool Mqtt::Isconnected() {
     return client.connected();
-    }
+}
 
 /**
- * @brief Connexion au réseau WiFi
+ * @brief Connects to the specified WiFi network.
  */
 void Mqtt::setup_wifi() {
     delay(10);
-    Serial.println();
-    Serial.print("Connexion à ");
+    Serial.println("\nConnecting to WiFi...");
+    Serial.print("Connecting to: ");
     Serial.println(ssid);
 
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
+    WiFi.mode(WIFI_STA);           // Set WiFi mode to station
+    WiFi.begin(ssid, password);    // Start connecting to WiFi
 
+    // Wait until the connection is established
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
     }
-    
-    randomSeed(micros());
-    Serial.println("\nWiFi connecté");
-    Serial.print("Adresse IP : ");
+
+    randomSeed(micros()); // Initialize the random number generator
+    Serial.println("\nWiFi connected!");
+    Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
 }
 
 /**
- * @brief Reconnexion au serveur MQTT
+ * @brief Reconnects to the MQTT broker if the connection is lost.
  */
 void Mqtt::reconnect() {
-  // Loop until we're reconnected
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    // Create a random client ID
-    String clientId = "ESP8266Client-";
-    clientId += String(random(0xffff), HEX);
-    // Attempt to connect
-    if (client.connect(clientId.c_str())) {
-      Serial.println("connected");
-      // Once connected, publish an announcement...
-      client.publish("outTopic/msgs", "hello world");
-      // ... and resubscribe
-      client.subscribe("inTopic");
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
+    while (!client.connected()) {
+        Serial.print("Attempting MQTT connection...");
+        String clientId = "ESP8266Client-";     // Create a unique client ID
+        clientId += String(random(0xffff), HEX);
+        
+        if (client.connect(clientId.c_str())) { // Attempt to connect
+            Serial.println("Connected to MQTT broker.");
+            client.publish("outTopic/msgs", "hello world");  // Publish a test message
+            client.subscribe("inTopic");                     // Subscribe to a topic
+        } else {
+            Serial.print("Connection failed, rc=");
+            Serial.print(client.state());
+            Serial.println(". Retrying in 5 seconds...");
+            delay(5000);
+        }
     }
-  }
 }
 
 /**
- * @brief Envoi d’un message sur un canal MQTT
- * @param canal Canal cible
- * @param message Contenu du message
+ * @brief Sends an integer value as a message to a specified MQTT channel.
+ * @param canal MQTT channel.
+ * @param val Integer value to send.
  */
 void Mqtt::envoyermsgint(const char* canal, int val) {
-
-    snprintf(msg, MSG_BUFFER_SIZE, "%d", val); // Convierte el valor a cadena y lo almacena en 'msg'
-    String fullTopic = String("outTopic/") + String(canal);
-    Serial.print("Publish message: ");
-    //Serial.print("Message envoyé sur le sujet: ");
+    snprintf(msg, MSG_BUFFER_SIZE, "%d", val);  // Convert integer to a string
+    String fullTopic = String("outTopic/") + String(canal); // Format the topic
+    Serial.print("Publishing to: ");
     Serial.print(fullTopic);
-    Serial.print(" ");
+    Serial.print(" Message: ");
     Serial.println(msg);
-
-    client.publish(fullTopic.c_str(), msg); // Publicar en el canal correcto
-}
-
-void Mqtt::envoyermsgtxt(const char* canal, const String text) {
-    snprintf(msg, MSG_BUFFER_SIZE, "%s", text.c_str()); // Convierte el objeto String a char*
-    
-    String fullTopic = String("outTopic/") + String(canal);
-    Serial.print(fullTopic);
-    Serial.print(" ");
-    Serial.println(msg);
-
-    client.publish(fullTopic.c_str(), msg); // Publicar en el canal correcto
+    client.publish(fullTopic.c_str(), msg); // Publish the message
 }
 
 /**
- * @brief Callback pour traiter les messages reçus
- * @param topic Sujet du message
- * @param payload Données du message
- * @param length Longueur des données
+ * @brief Sends a text message to a specified MQTT channel.
+ * @param canal MQTT channel.
+ * @param text String to send.
+ */
+void Mqtt::envoyermsgtxt(const char* canal, const String text) {
+    snprintf(msg, MSG_BUFFER_SIZE, "%s", text.c_str()); // Convert string to char array
+    String fullTopic = String("outTopic/") + String(canal); // Format the topic
+    Serial.print("Publishing to: ");
+    Serial.print(fullTopic);
+    Serial.print(" Message: ");
+    Serial.println(msg);
+    client.publish(fullTopic.c_str(), msg); // Publish the message
+}
+
+/**
+ * @brief Callback function to process received MQTT messages.
+ * @param topic Topic of the received message.
+ * @param payload Message content.
+ * @param length Length of the message content.
  */
 void Mqtt::callback(char* topic, byte* payload, unsigned int length) {
-    Serial.print("Message reçu sur le sujet: ");
+    Serial.print("Message received on topic: ");
     Serial.print(topic);
-    Serial.print(" - Message: ");
+    Serial.print(" Message: ");
     for (unsigned int i = 0; i < length; i++) {
         Serial.print((char)payload[i]);
     }
@@ -120,8 +126,8 @@ void Mqtt::callback(char* topic, byte* payload, unsigned int length) {
 }
 
 /**
- * @brief Modifier le mot écrit (fonction personnalisée)
+ * @brief Custom function to modify written data (to be implemented).
  */
 void Mqtt::ModifierMotEcrit() {
-    // Implémentation personnalisée
+    // Custom implementation
 }

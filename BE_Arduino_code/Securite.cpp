@@ -1,63 +1,71 @@
-#include "Securite.h"
-#include "LCD.h"
-#include "Button.h"
-#include "Potentiometre.h"
+#include "Securite.h"  
 
-Securite::Securite() : motEcrit(new int[4]{0, 0, 0, 0}), motPasse(new int[4]{5, 7, 4, 3}), posPasse(0), tentatif(0) {}
+// Constructor: initializes dynamic arrays and member variables
+Securite::Securite() 
+    : motEcrit(new int[4]{0, 0, 0, 0}), // Initialize entered password array with zeros
+      motPasse(new int[4]{5, 7, 4, 3}), // Set the correct password
+      posPasse(0),                      // Start position for entering digits
+      tentatif(0),                      // Initial number of attempts
+      RightPass(false) {}               // Password validation flag set to false
 
-bool Securite::validation() {
-    for (int i = 0; i < 4; i++) {
+// Destructor: releases dynamically allocated memory
+Securite::~Securite() {
+    delete[] motPasse;   // Free memory allocated for the correct password
+    delete[] motEcrit;   // Free memory allocated for the entered password
+}
+
+// Validates if the entered password matches the correct password
+bool Securite::ValiderMotPass() {
+    for (int i = 0; i < 4; ++i) {
         if (motPasse[i] != motEcrit[i]) {
-            tentatif++;
-            if (tentatif >= 3) {
-                return false;
-            }
-            return false;
+            return false; // If any digit doesn't match, return false
         }
     }
-    tentatif = 0;
-    return true;
+    return true; // All digits match, return true
 }
 
-void Securite::effacer(Button &button) {
-    static unsigned long startPressTime = 0;
+// Deletes the last entered digit
+void Securite::effacer() {
+    if (posPasse > 0) {  // Ensure there's a digit to delete
+        posPasse--;      // Move back one position
+    }
+}
 
-    if (button.isPressed()) {
-        if (startPressTime == 0) {
-            startPressTime = millis();
-        } else if (millis() - startPressTime >= 3000) {
-            if (posPasse > 0) {
-                posPasse--;
-                motEcrit[posPasse] = 0;
-            }
-            startPressTime = 0;
+// Sets a digit in the entered password
+void Securite::setMotEcrit(int number) {
+    motEcrit[posPasse] = number; // Store the digit at the current position
+    posPasse++;                  // Move to the next position
+
+    if (posPasse >= 4) { // If all 4 digits have been entered:
+        if (ValiderMotPass()) {  // Validate the password
+            RightPass = true;    // Mark the password as correct
         }
-    } else {
-        startPressTime = 0;
+        posPasse = 0;            // Reset the position for the next entry
+        tentatif++;              // Increment the number of attempts
     }
 }
 
-void Securite::setMotEcrit(int posPot, LCD &lcd, Button &button) {
-    
-    int numero = PPToPosLCD(posPot, lcd);
-
-    // Verify if the button was pressed
-    if (button.getButton()) {
-        motEcrit[posPasse] = numero;         
-        posPasse = (posPasse + 1) % 4;      
-    }
+// Resets the number of attempts to 0
+void Securite::resetTentatives() {
+    tentatif = 0; // Reset the attempt counter
 }
 
+// Returns the current position in the entered password
+int Securite::getPosPasse() {
+    return posPasse; // Return the value of posPasse
+}
 
-void Securite::PPToPosLCD(int posPot, LCD &lcd, Button &button) {
-    int numero = map(posPot, 0, 1023, 0, 9);
+// Returns the current number of attempts
+int Securite::getTentatif() {
+    return tentatif; // Return the number of attempts
+}
 
-    lcd.SetPosLCD(posPasse);
-    lcd.SetTextF1(String(numero).c_str());
-    lcd.Refresh();
+// Checks if the password is correct
+bool Securite::checkRightPass() {
+    return RightPass; // Return the password validation status
+}
 
-    if (button.getButton()) {
-        motEcrit[posPasse] = numero;
-        posPasse = (posPasse + 1) % 4;
-    }
+// Resets the password validation flag
+void Securite::ResetRightPass() {
+    RightPass = false; // Reset the flag to false
 }
