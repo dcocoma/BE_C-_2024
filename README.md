@@ -55,9 +55,6 @@ Le projet utilise les bibliothèques suivantes :
 - `Ultrasonic.h`  
 
 ---
-Aquí está la sección actualizada con la adición de las instrucciones para instalar Node-RED y configurar el flujo de comunicación MQTT:
-
----
 
 ## Installation et Utilisation  
 
