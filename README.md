@@ -99,7 +99,6 @@ Pour utiliser la communication MQTT avec votre système, vous devez installer No
   
 Les détails de la création de ces blocs sont bien expliqués dans le tutoriel que vous pouvez suivre à l'adresse mentionnée ci-dessus.
 
-```
 
 ### Étape 7 : Compilez et Chargez le Code  
 1. Ouvrez le projet dans l'IDE Arduino.  
