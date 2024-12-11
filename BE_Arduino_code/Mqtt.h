@@ -4,6 +4,7 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <Arduino.h>
+#include "Securite.h"
 
 // Buffer size for MQTT messages
 #define MSG_BUFFER_SIZE (50)
@@ -20,9 +21,9 @@ private:
     WiFiClient NewClient;          // WiFi client for network communication
     PubSubClient client;           // MQTT client for broker communication
     char msg[MSG_BUFFER_SIZE];     // Buffer for MQTT messages
-    int value;                     // Value associated with the message
-
+    
 public:
+
     /**
      * @brief Constructor: Initializes WiFi and MQTT parameters.
      * @param ssid WiFi network name.
@@ -43,7 +44,6 @@ public:
     void envoyermsgint(const char* canal, int val);  // Sends an integer message
     void envoyermsgtxt(const char* canal, String text); // Sends a text message
     static void callback(char* topic, byte* payload, unsigned int length); // Message callback
-    void ModifierMotEcrit();         // Custom functionality placeholder
 };
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef SECURITE_H
 #define SECURITE_H
 #include <Arduino.h>
-
+#include "LCD.h"
 class Securite {
 private:
     int* motPasse;      // Pointer to store the correct password (4 digits)
@@ -12,7 +12,7 @@ private:
 
 public:
     // Constructor and Destructor
-    Securite();         // Initializes the password and attempts counter
+    Securite(LCD* lcd);         // Initializes the password and attempts counter
     ~Securite();        // Releases dynamically allocated memory
 
     // Methods
@@ -22,8 +22,10 @@ public:
     void resetTentatives();    // Resets the number of attempts to 0
     int getPosPasse();         // Returns the current position in the entered password
     int getTentatif();         // Returns the current number of attempts
+    int* getMotEcrit();
     bool checkRightPass();
     void ResetRightPass();
+    LCD* lcd;
 };
 
 #endif

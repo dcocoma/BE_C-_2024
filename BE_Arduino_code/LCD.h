@@ -12,6 +12,7 @@ private:
     const int colorG;        // Green component of the backlight color
     const int colorB;        // Blue component of the backlight color
     String TextF1;           // Text for the first line of the LCD
+    String code;
     int PosLCD;              // Cursor position on the second line
 
 public:
@@ -25,6 +26,8 @@ public:
     void Refresh();          // Refreshes the LCD with updated content
     void print(String txt);  // Clears the LCD and displays text
     void setCursor(int pos); // Sets the cursor to a specific position
+    void setPasscode(int* num);
+    String getPasscode();
 };
 
 #endif

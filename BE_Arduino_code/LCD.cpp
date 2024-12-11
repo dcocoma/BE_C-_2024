@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include "rgb_lcd.h"
 
-LCD::LCD() : colorR(0), colorG(0), colorB(255), PosLCD(0){}
+LCD::LCD() : colorR(0), colorG(0), colorB(255), PosLCD(0),code("0000"){}
 
 void LCD::Init() {
   lcd.begin(16, 2);
@@ -11,10 +11,21 @@ void LCD::Init() {
   lcd.blink();
   lcd.clear();
   delay(2000);
+  
 }
 
 void LCD::SetTextF1(String texto) {
     TextF1 = texto;   
+}
+void LCD::setPasscode(int* num){
+  code = "";
+  for(int i=0;i<4;i++){
+    code += String(num[i]);
+  }
+}
+
+String LCD::getPasscode(){
+  return code;
 }
 
 void LCD::SetPosLCD(int num) {
@@ -50,7 +61,8 @@ void LCD::Refresh() {
   lcd.clear();           
   lcd.print(String(TextF1));
   lcd.setCursor(0,1);
-  lcd.print("0123456789");
+  String ms = "0123456789 " + code;
+  lcd.print(ms);
   lcd.createChar(2, borrar);
   //lcd.createChar(1, happy);
   lcd.setCursor(15, 1);
@@ -67,32 +79,3 @@ void LCD::print(String txt){
 void LCD::setCursor(int pos){
   lcd.setCursor(pos, 1);
 }
-
-#ifndef LCD_H
-#define LCD_H
-#include <Wire.h>
-#include "rgb_lcd.h"
-
-class LCD {
-private:
-  rgb_lcd lcd;
-
-  const int colorR;
-  const int colorG;
-  const int colorB;      
-
-  String TextF1;           
-  int PosLCD;
-
-public:
-  LCD();
-  LCD(const int colorR, const int colorG, const int colorB);  
-  void Init();
-  void SetTextF1(String texto);
-  void SetPosLCD(int num);
-  int getPosLCD();
-  void Refresh();  
-  void print(String txt);
-  void setCursor(int pos);
-};
-#endif

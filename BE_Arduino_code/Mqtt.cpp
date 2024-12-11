@@ -7,7 +7,7 @@
  * @param mqtt_server MQTT server address.
  */
 Mqtt::Mqtt(const char* ssid, const char* password, const char* mqtt_server) 
-    : ssid(ssid), password(password), mqtt_server(mqtt_server), value(0) {
+    : ssid(ssid), password(password), mqtt_server(mqtt_server) {
     client.setClient(NewClient);                 // Attach the WiFi client to the MQTT client
     client.setServer(mqtt_server, 1883);         // Set MQTT server and port
     client.setCallback(callback);               // Set the callback function for incoming messages
@@ -29,6 +29,7 @@ void Mqtt::run() {
  * @brief Checks if the MQTT client is connected to the broker.
  * @return True if connected, false otherwise.
  */
+
 bool Mqtt::Isconnected() {
     return client.connected();
 }
@@ -68,7 +69,7 @@ void Mqtt::reconnect() {
         
         if (client.connect(clientId.c_str())) { // Attempt to connect
             Serial.println("Connected to MQTT broker.");
-            client.publish("outTopic/msgs", "hello world");  // Publish a test message
+            client.publish("outTopic/msgs", "System connected");  // Publish a test message
             client.subscribe("inTopic");                     // Subscribe to a topic
         } else {
             Serial.print("Connection failed, rc=");
@@ -82,7 +83,7 @@ void Mqtt::reconnect() {
 /**
  * @brief Sends an integer value as a message to a specified MQTT channel.
  * @param canal MQTT channel.
- * @param val Integer value to send.
+ * @param val Integer valu to send.
  */
 void Mqtt::envoyermsgint(const char* canal, int val) {
     snprintf(msg, MSG_BUFFER_SIZE, "%d", val);  // Convert integer to a string
@@ -123,11 +124,4 @@ void Mqtt::callback(char* topic, byte* payload, unsigned int length) {
         Serial.print((char)payload[i]);
     }
     Serial.println();
-}
-
-/**
- * @brief Custom function to modify written data (to be implemented).
- */
-void Mqtt::ModifierMotEcrit() {
-    // Custom implementation
 }

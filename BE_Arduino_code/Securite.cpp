@@ -1,12 +1,14 @@
 #include "Securite.h"  
 
 // Constructor: initializes dynamic arrays and member variables
-Securite::Securite() 
+Securite::Securite(LCD* lcd) 
     : motEcrit(new int[4]{0, 0, 0, 0}), // Initialize entered password array with zeros
       motPasse(new int[4]{5, 7, 4, 3}), // Set the correct password
       posPasse(0),                      // Start position for entering digits
       tentatif(0),                      // Initial number of attempts
-      RightPass(false) {}               // Password validation flag set to false
+      RightPass(false) {
+      this->lcd = lcd;
+      }               // Password validation flag set to false
 
 // Destructor: releases dynamically allocated memory
 Securite::~Securite() {
@@ -29,6 +31,7 @@ void Securite::effacer() {
     if (posPasse > 0) {  // Ensure there's a digit to delete
         posPasse--;      // Move back one position
     }
+    motEcrit[posPasse] = 0;
 }
 
 // Sets a digit in the entered password
@@ -36,13 +39,22 @@ void Securite::setMotEcrit(int number) {
     motEcrit[posPasse] = number; // Store the digit at the current position
     posPasse++;                  // Move to the next position
 
-    if (posPasse >= 4) { // If all 4 digits have been entered:
+    if (posPasse == 4) { // If all 4 digits have been entered:
         if (ValiderMotPass()) {  // Validate the password
             RightPass = true;    // Mark the password as correct
+            resetTentatives();
+            this->lcd->print("Correct password");
         }
         posPasse = 0;            // Reset the position for the next entry
+        this->lcd->print("Incorrect password");
         tentatif++;              // Increment the number of attempts
+        for(int i = 0; i<4;i++){
+          motEcrit[i] = 0;
+        }
     }
+}
+int* Securite::getMotEcrit(){
+  return motEcrit;
 }
 
 // Resets the number of attempts to 0

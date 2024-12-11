@@ -1,24 +1,18 @@
 #include <iostream>
 #ifndef BUZZER_H
 #define BUZZER_H
+
 #include <Arduino.h>
+#include "Component.h"
 
-class Buzzer {
-private:
-    int pin;      
-     
-
+class Buzzer : public Component{
 public:
     // Constructor
-    Buzzer(int pin);
+    Buzzer(int pin):Component(pin){
+      pinMode(pin, OUTPUT);
+    }
 
-   
-    void init();
-
-    void setBuzzer(bool c);
-
-   
+    void setBuzzerON();
+    void setBuzzerOFF();
 };
-
 #endif
-};
