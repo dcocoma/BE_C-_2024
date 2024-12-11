@@ -56,7 +56,7 @@ Le projet utilise les bibliothèques suivantes :
 
 ---
 
-## Installation et Utilisation  
+## Installation
 
 ### Étape 1: Clonez ce répertoire GitHub sur votre machine locale : 
 ```bash
@@ -104,19 +104,27 @@ Les détails de la création de ces blocs sont bien expliqués dans le tutoriel 
 
 ---
 
-## Étapes de Configuration Matérielle et Logicielle  
-### Étape 1 : Configuration Matérielle  
-1. Connectez tous les composants selon le schéma électrique (à fournir).  
-2. Téléchargez le firmware sur la carte ESP8266 via Arduino IDE.
+## Étapes de Configuration Matérielle  
+### Étape 1 : Conection composants au STM8266  
+1. Connectez tous les composants selon l'image suivante.
+2. Connectez le STM
 
 ### Étape 2 : Configuration Logicielle  
-1. Modifiez les identifiants Wi-Fi et l'adresse du serveur MQTT dans le code (`ssid`, `password`, `mqtt_server`).  
-2. Installez les bibliothèques nécessaires dans l'IDE Arduino.
-
+1. Établir un réseau Wi-Fi stable pour connecter à la fois l'ordinateur et l'ESP8266.  
+2. Lancer Node-RED.  
+3. Ouvrir la page web et le tableau de bord.  
+4. Ouvrir l'environnement Arduino.  
+5. Alimenter l'ESP8266 et le charger avec le programme.
+   
 ### Étape 3 : Test et Fonctionnement  
-1. Alimentez la carte ESP8266.  
-2. Utilisez les boutons et le potentiomètre pour interagir avec le système.  
-3. Vérifiez l'affichage sur l'écran LCD et les messages reçus via MQTT.
+1. Connectez la carte ESP8266.
+![image](https://github.com/user-attachments/assets/7a0a244c-8125-434e-b2b4-fd5bfbf19401)
+
+2. Utilisez les boutons et le potentiomètre pour interagir avec le système.
+![image](https://github.com/user-attachments/assets/b00bc207-7430-40cd-8906-5905b199b1af)
+
+4. Vérifiez l'affichage sur l'écran LCD et les messages reçus via MQTT.
+![image](https://github.com/user-attachments/assets/85135ea0-76ce-4b9f-b621-1c791475ea82)
 
 ---
 
@@ -130,6 +138,9 @@ Les détails de la création de ces blocs sont bien expliqués dans le tutoriel 
 - **`Securite.h / Securite.cpp`** : Système de validation des mots de passe et gestion des tentatives.  
 - **`SenProx.h / SenProx.cpp`** : Gestion du capteur de proximité pour détecter des objets ou des intrusions.  
 - **`SenSon.h / SenSon.cpp`** : Gestion du capteur sonore pour surveiller l'intensité sonore.
+
+![image](https://github.com/user-attachments/assets/d6eff764-083c-4a00-903a-178560fab8ba)
+
 
 ---
 
